@@ -9,6 +9,7 @@ from django.forms.models import model_to_dict
 from .serializer import ProductSerializer
 from rest_framework import generics
 from django.shortcuts import get_object_or_404
+from rest_framework import mixins
 # Create your views here.
 @api_view(['POST','GET'])
 def home(request,pk=None,*args,**kwargs):
@@ -63,11 +64,18 @@ product_list_create=ProductListCreateApiView.as_view()
 class ProductUpdateApiView(generics.UpdateAPIView):
     queryset=Product.objects.all()
     serializer_class=ProductSerializer
-    print('----',queryset)
+
     def perform_update(self,serializer):
         instance=serializer.save()
         if not instance.discount:
             instance.discount='10000000'
-
 product_update_view=ProductUpdateApiView.as_view()
 
+class ProductDeleteApiView(generics.DestroyAPIView):
+    queryset=Product.objects.all()
+    serializer_class=ProductSerializer
+product_delete_view=ProductDeleteApiView.as_view()
+
+# ------------------------------------------------------------
+class ProductGenericApiViewMixins(generics.GenericAPIView,mixins.CreateModelMixin):
+    pass
