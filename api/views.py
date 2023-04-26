@@ -9,7 +9,8 @@ from django.forms.models import model_to_dict
 from .serializer import ProductSerializer
 from rest_framework import generics
 from django.shortcuts import get_object_or_404
-from rest_framework import mixins
+from rest_framework import mixins,generics
+from .permisson import IsStaffEditorPermisson
 # Create your views here.
 @api_view(['POST','GET'])
 def home(request,pk=None,*args,**kwargs):
@@ -39,6 +40,7 @@ def home(request,pk=None,*args,**kwargs):
 class ProductRetrieveApiView(generics.RetrieveAPIView):
     queryset=Product.objects.all()
     serializer_class=ProductSerializer
+    permission_classes=[IsStaffEditorPermisson]
 product_retrieve=ProductRetrieveApiView.as_view()
  
 
@@ -77,5 +79,29 @@ class ProductDeleteApiView(generics.DestroyAPIView):
 product_delete_view=ProductDeleteApiView.as_view()
 
 # ------------------------------------------------------------
-class ProductGenericApiViewMixins(generics.GenericAPIView,mixins.CreateModelMixin):
-    pass
+class ProductGenericApiViewListModelMixin(generics.GenericAPIView,mixins.ListModelMixin):
+    queryset=Product.objects.all()
+    serializer_class=ProductSerializer
+
+    def get(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+        # return super().create(request, *args, **kwargs)
+product_listmixin_view=ProductGenericApiViewListModelMixin.as_view()
+
+
+class ProductGenericsApiViewCreateModelMixin(generics.GenericAPIView,mixins.CreateModelMixin):
+    queryset=Product.objects.all()
+    serializer_class=ProductSerializer
+
+    def post(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+product_createmixin_view=ProductGenericsApiViewCreateModelMixin.as_view()
+    
+
+class ProductGenericApiViewUpdateModelMixin(generics.GenericAPIView, mixins.UpdateModelMixin):
+    queryset=Product.objects.all()
+    serializer_class=ProductSerializer
+
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+product_updatemixin_view=ProductGenericApiViewUpdateModelMixin.as_view()

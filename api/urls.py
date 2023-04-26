@@ -9,4 +9,7 @@ urlpatterns = [
     path('api/product/<int:pk>/',views.product_retrieve),
     path('api/update/<int:pk>/',views.product_update_view),
     path('api/delete/<int:pk>/',views.product_delete_view),
+    path('listmixin/',views.product_listmixin_view),
+    path('createmixin/',views.product_createmixin_view),
+    path('updatemixin/<int:pk>/',views.product_updatemixin_view),
 ]  
