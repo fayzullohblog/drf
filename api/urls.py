@@ -1,7 +1,9 @@
 from . import views
 from django.urls import path
+from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
+    path('auth/',obtain_auth_token,name='api-auth-token'),
     path('',views.product_create),
     path('api/',views.home,name='home'),
     path('list_create/',views.product_list_create),

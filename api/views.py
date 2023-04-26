@@ -11,6 +11,7 @@ from rest_framework import generics
 from django.shortcuts import get_object_or_404
 from rest_framework import mixins,generics
 from .permisson import IsStaffEditorPermisson
+from rest_framework import authentication
 # Create your views here.
 @api_view(['POST','GET'])
 def home(request,pk=None,*args,**kwargs):
@@ -40,6 +41,7 @@ def home(request,pk=None,*args,**kwargs):
 class ProductRetrieveApiView(generics.RetrieveAPIView):
     queryset=Product.objects.all()
     serializer_class=ProductSerializer
+    authentication_classes=[authentication.SessionAuthentication,authentication.TokenAuthentication]
     permission_classes=[IsStaffEditorPermisson]
 product_retrieve=ProductRetrieveApiView.as_view()
  
