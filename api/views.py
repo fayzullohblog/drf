@@ -1,17 +1,13 @@
 
-from django.shortcuts import render
-import json
-from django.http import JsonResponse
 from .models import Product
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.forms.models import model_to_dict
 from .serializer import ProductSerializer
 from rest_framework import generics
 from django.shortcuts import get_object_or_404
 from rest_framework import mixins,generics
-from .permisson import IsStaffEditorPermisson
-from rest_framework import authentication
+from .mixin import StaffEditorPermissionMixin
+
 # Create your views here.
 @api_view(['POST','GET'])
 def home(request,pk=None,*args,**kwargs):
@@ -38,15 +34,21 @@ def home(request,pk=None,*args,**kwargs):
         return Response({'Invalid':'Not good data'},status=400)
 
 
-class ProductRetrieveApiView(generics.RetrieveAPIView):
+class ProductRetrieveApiView(
+    StaffEditorPermissionMixin,
+    generics.RetrieveAPIView):
+    
     queryset=Product.objects.all()
     serializer_class=ProductSerializer
-    authentication_classes=[authentication.SessionAuthentication,authentication.TokenAuthentication]
-    permission_classes=[IsStaffEditorPermisson]
+    # authentication_classes=[authentication.SessionAuthentication,
+    #                         TokenAuthentication] 
+    # permission_classes=[IsStaffEditorPermisson]
 product_retrieve=ProductRetrieveApiView.as_view()
  
 
-class ProductCreateApiView(generics.CreateAPIView):
+class ProductCreateApiView(
+    StaffEditorPermissionMixin,
+    generics.CreateAPIView):
     queryset=Product.objects.all()
     serializer_class=ProductSerializer
     
@@ -59,13 +61,17 @@ class ProductCreateApiView(generics.CreateAPIView):
         return super().perform_create(serializer)
 product_create=ProductCreateApiView.as_view()
 
-class ProductListCreateApiView(generics.ListCreateAPIView):
+class ProductListCreateApiView(
+    StaffEditorPermissionMixin,
+    generics.ListCreateAPIView):
     queryset=Product.objects.all()
     serializer_class=ProductSerializer
 product_list_create=ProductListCreateApiView.as_view()
 
 
-class ProductUpdateApiView(generics.UpdateAPIView):
+class ProductUpdateApiView(
+    StaffEditorPermissionMixin,
+    generics.UpdateAPIView):
     queryset=Product.objects.all()
     serializer_class=ProductSerializer
 
@@ -75,7 +81,9 @@ class ProductUpdateApiView(generics.UpdateAPIView):
             instance.discount='10000000'
 product_update_view=ProductUpdateApiView.as_view()
 
-class ProductDeleteApiView(generics.DestroyAPIView):
+class ProductDeleteApiView(
+    StaffEditorPermissionMixin,
+    generics.DestroyAPIView):
     queryset=Product.objects.all()
     serializer_class=ProductSerializer
 product_delete_view=ProductDeleteApiView.as_view()
