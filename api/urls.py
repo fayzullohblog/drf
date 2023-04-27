@@ -14,4 +14,5 @@ urlpatterns = [
     path('listmixin/',views.product_listmixin_view),
     path('createmixin/',views.product_createmixin_view),
     path('updatemixin/<int:pk>/',views.product_updatemixin_view),
+
 ]  

@@ -19,5 +19,7 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('api.urls')),
+    #  router
+    path('router/',include('cfehome.router'))    
     
 ]
