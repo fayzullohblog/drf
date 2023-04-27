@@ -34,6 +34,7 @@ def home(request,pk=None,*args,**kwargs):
         return Response({'Invalid':'Not good data'},status=400)
 
 
+
 class ProductRetrieveApiView(
     StaffEditorPermissionMixin,
     generics.RetrieveAPIView):
